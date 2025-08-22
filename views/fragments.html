@@ -54,7 +54,9 @@
 
 {{ block "demo2-search-form" . }}
     <form hx-post="demo02-search" hx-target="#search-result" 
-    hx-indicator="#spinner" hx-disabled-elt="button">
+    hx-indicator="#spinner" 
+    hx-on:htmx:before-request="htmx.find('#search-result').innerHTML=''"
+    hx-disabled-elt="button">
             <div class="mb-3">
                 <label for="nameInput" class="form-label">Name</label>
                 <input type="text" class="form-control" id="nameInput" name="name" placeholder="Leave empty for error">

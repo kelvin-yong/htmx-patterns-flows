@@ -28,6 +28,7 @@
             <li>On error: result is cleared, page message/error is displayed</li>
             <li>Bonus: Disable form buttons during submission</li>
             <li>Bonus: Display "loading" indicator</li>
+            <li>Bonus: Clears out old search result before searching</li>
         </ul>
         
         <div class="badge text-bg-info">Technique</div>
@@ -49,8 +50,9 @@
         </ul>
         <div class="badge text-bg-light">Bonus</div>
         <ul>
-            <li><pre>hx-disabled-elt="button"</pre> to disable button or form fields when request in flight</li>
-            <li><pre>hx-indicator="#spinner"</pre> in the form. Then include <pre>&lt;img id=&quot;spinner&quot; class=&quot;htmx-indicator&quot; src=&quot;/static/images/bars.svg&quot; /&gt;</pre></li>
+            <li>To disable button or form fields when request in flight: <pre>hx-disabled-elt="button"</pre></li>
+            <li>To show a spinning indicator: <pre>hx-indicator="#spinner"</pre> in the form. Then include <pre>&lt;img id=&quot;spinner&quot; class=&quot;htmx-indicator&quot; src=&quot;/static/images/bars.svg&quot; /&gt;</pre></li>
+            <li>To clear existing search result: <pre>hx-on:htmx:before-request="htmx.find('#search-result').innerHTML=''"</pre></li>
         </ul>
         
         <div class="badge text-bg-info">Notes</div>
