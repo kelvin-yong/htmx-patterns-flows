@@ -1,0 +1,66 @@
+{{ block "demo01" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Search user (counter)</h2>
+        {{ template "demo1-search-form"}}  
+      <!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 01</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>Submit a form</li>
+            <li>On success: replace form with search result</li>
+            <li>On success: Search result contains a back button</li>
+            <li>On error: keep the form, but clear it and show error</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>In the form, <pre>hx-post="api"</pre>: to POST api</li>
+            <li>In the form, <pre>hx-target="this"</pre> and <pre>hx-swap="outerHTML"</pre>: so that the whole form is swapped with the response</li>
+            <li>In the form, <pre>hx-on:htmx:after-request="this.reset()"</pre>: to reset the form after the request. Optional if you are replacing the form anyway</li>
+        </ul>
+        <div class="badge text-bg-light">Success case</div>
+        <ul>
+            <li>Replace content with response</li>
+            <li>Remember to clear the error message using out of band. E.g. return fragment<pre>&lt;div id=&quot;pageMessage&quot; hx-swap-oob=&quot;true&quot;&gt;&lt;/div&gt;</pre></li>
+            <li>
+              <pre>hx-boost</pre>doesn't seem to work on buttons. Only helpful for a href. 
+              Replicate behavior using <pre>hx-target</pre> accordingly
+              <pre>&lt;button hx-on=&quot;click&quot; hx-target=&quot;body&quot; hx-get=&quot;/demo01&quot; class=&quot;btn btn-secondary&quot;&gt;Back&lt;/button&gt;</pre>
+            </li>
+        </ul>
+        <div class="badge text-bg-light">Error case</div>
+        <ul>
+            <li>Option 1: Return the empty form</li>
+            <li>Option 2: Return nothing, add response header<pre>"HX-Reswap":"none"</pre> so that the hx-swap strategy is now none and form isn't replaced</li>
+            <li>Either way, need to include error fragement <pre>&lt;div id=&quot;pageMessage&quot; class=&quot;alert alert-danger&quot; role=&quot;alert&quot; hx-swap-oob=&quot;true&quot;&gt;Some error&lt;/div&gt;</pre></li>
+            <li>Option 1 is more straight forward, need not manipulate headers. But more data</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li>Try searching with "Error1" or "Error2", then search again with "john" (or any other name)</li>
+        </ul>
+        
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+

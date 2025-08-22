@@ -1,0 +1,68 @@
+{{ block "demo02" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page message --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Search user (Helpdesk)</h2>
+        {{ template "demo2-search-form"}}  
+
+        <img id="spinner" class="htmx-indicator" src="/static/images/bars.svg" />
+
+        <div id="search-result"></div>
+      <!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 02</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>Submit a form and display results elsewhere</li>
+            <li>On success: result is updated, page message/error is cleared</li>
+            <li>On error: result is cleared, page message/error is displayed</li>
+            <li>Bonus: Disable form buttons during submission</li>
+            <li>Bonus: Display "loading" indicator</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>In the form, <pre>hx-post="api"</pre>: to POST api</li>
+            <li>In the form, <pre>hx-target="#search-result"</pre>: this target a separate html element and replaces its "innerHTML" (hx-swap's default swap strategy)</li>
+        </ul>
+        <div class="badge text-bg-light">Success case</div>
+        <ul>
+            <li>The targeted element has the results</li>
+            <li>The error message using out of band. E.g. return fragment<pre>&lt;div id=&quot;pageMessage&quot; hx-swap-oob=&quot;true&quot;&gt;&lt;/div&gt;</pre></li>
+        </ul>
+        <div class="badge text-bg-light">Error case</div>
+        <ul>
+            <li>Just don't return any thing. It will be swapped with nothing and is empty</li>
+            <li>Remember need to include error fragement <pre>&lt;div id=&quot;pageMessage&quot; class=&quot;alert alert-danger&quot; role=&quot;alert&quot; hx-swap-oob=&quot;true&quot;&gt;Some error&lt;/div&gt;</pre></li>
+        </ul>
+        <div class="badge text-bg-light">Bonus</div>
+        <ul>
+            <li><pre>hx-disabled-elt="button"</pre> to disable button or form fields when request in flight</li>
+            <li><pre>hx-indicator="#spinner"</pre> in the form. Then include <pre>&lt;img id=&quot;spinner&quot; class=&quot;htmx-indicator&quot; src=&quot;/static/images/bars.svg&quot; /&gt;</pre></li>
+        </ul>
+        
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li>Try searching with no name for error case</li>
+        </ul>
+        
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+

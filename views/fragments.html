@@ -1,0 +1,87 @@
+{{ block "demo1-search-form" . }}
+    <form hx-post="demo01-search" hx-target="this" hx-swap="outerHTML" hx-on:htmx:after-request="this.reset()">
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Key in 'Error1' or 'Error2' for error">
+                <div class="text-danger small mt-1">
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="reset" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+{{ end }}
+
+{{ block "demo1-search-result" . }}
+  <div class="container bg-white p-4 rounded shadow-sm">
+    <h2 class="mb-4">User Information</h2>
+
+    <!-- Key-Value List -->
+    <div class="row mb-2">
+      <div class="col-sm-4 fw-semibold">Name:</div>
+      <div class="col-sm-8">{{ .name }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-4 fw-semibold">Email:</div>
+      <div class="col-sm-8">{{ .name }}@example.com</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-4 fw-semibold">Role:</div>
+      <div class="col-sm-8">Administrator</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-4 fw-semibold">Status:</div>
+      <div class="col-sm-8 text-success">Active</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-sm-4 fw-semibold">Last Login:</div>
+      <div class="col-sm-8">August 22, 2025</div>
+    </div>
+    
+    <button hx-on="click" hx-target="body" hx-get="/demo01" class="btn btn-secondary">Back</button>
+    
+  </div>
+{{ end }}
+
+{{ block "page-message" . }}
+    {{ if .message }}
+    <div id="pageMessage" class="alert alert-{{ .type}}" role="alert" hx-swap-oob="true">{{ .message}}</div>
+    {{ else }}
+    <div id="pageMessage" hx-swap-oob="true"></div>
+    {{ end }}
+{{ end }}
+
+{{ block "demo2-search-form" . }}
+    <form hx-post="demo02-search" hx-target="#search-result" 
+    hx-indicator="#spinner" hx-disabled-elt="button">
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Name</label>
+                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Leave empty for error">
+                <div class="text-danger small mt-1">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="emailInput" class="form-label">Mobile</label>
+                <input type="text" class="form-control" id="emailInput" name="mobile" placeholder="Your mobile number">
+                <div class="text-danger small mt-1">
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="reset" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+{{ end }}
+
+{{ block "demo2-search-result" . }}
+    {{ if .name}}
+    <hr>
+    <h5>Results</h5>
+    <ul class="list-group">
+        <li class="list-group-item">{{ .name }} 1</li>
+        <li class="list-group-item">{{ .name }} 2</li>
+        <li class="list-group-item">{{ .name }} 3</li>
+    </ul>
+    {{ end }}
+{{ end }}
