@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -25,6 +26,7 @@ func NewTemplates() *Templates {
 }
 
 func main() {
+	fmt.Println(RouteDemo3Step1)
 	e := echo.New()
 	e.Static("/static", "static")
 	e.Use(middleware.Logger())
@@ -66,7 +68,22 @@ func main() {
 	e.POST("demo03-add-01", generateDemo3Step("Month", "2/3", "demo03-add-02", "demo03-fav-colour"))
 	e.POST("demo03-add-02", generateDemo3Step("Colour", "3/3", "demo03-add-03", "demo03-thankyou"))
 	e.POST("demo03-add-03", generateDemo3Step("", "Done", "", ""))
+
+	registerFallbackRoutes(e)
+
 	e.Logger.Fatal(e.Start(":9000"))
+}
+
+func registerFallbackRoutes(e *echo.Echo) {
+	// may not be the best solution. Instead of registering multiple handlers
+	// consider have a catch all route. then check if the path is in one of
+	// the virtual routes that has a fallback
+	routes := []route{RouteDemo3Step1, RouteDemo3Step2, RouteDemo3Step3}
+	for _, r := range routes {
+		e.GET(r.Path, func(c echo.Context) error {
+			return c.Redirect(http.StatusFound, r.FallbackRoute.Path)
+		})
+	}
 }
 
 func demo1Search(c echo.Context) error {
