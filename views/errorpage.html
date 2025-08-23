@@ -1,0 +1,39 @@
+{{ block "errorpage" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left" style="background-color: #FFEEEE;">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Error Page</h2>
+        You have encountered an error
+        {{ if .message}}
+          <div class="alert alert-danger" role="alert" >{{ .message}}</div>        
+        {{ else }}
+        <div class="alert alert-danger" role="alert" >General error</div>
+        {{ end }}
+        <p>
+          <strong>
+            System time:
+            <span>{{.CreatedOn.Format "Jan 02, 2006 15:04:05 SGT" }}</span>
+          </strong> 
+        </p>
+<!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Error Page</h2>
+        Nothing else to see here.
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+

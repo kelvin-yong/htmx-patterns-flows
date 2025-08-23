@@ -14,6 +14,9 @@
                     evt.detail.isError = false;
                 }
             });
+            document.body.addEventListener("logoutEvent", function(evt){
+                alert(evt.detail.level + ": " + evt.detail.details);   
+            });
         });
     </script>
 </head>
@@ -32,6 +35,7 @@
       <li><a href="demo01" class="text-decoration-none">Demo 1: Submit form and replace itself, update error status.</a></li>
       <li><a href="demo02" class="text-decoration-none">Demo 2: Submit and preserve form. Display results somewhere.</a></li>
       <li><a href="demo03" class="text-decoration-none">Demo 3: Multi-step form and handling history. Appending results.</a></li>
+      <li><a href="demo04" class="text-decoration-none">Demo 4: Error Pages and triggering client events from server.</a></li>
     </ul>
   </details>
 {{ end }}

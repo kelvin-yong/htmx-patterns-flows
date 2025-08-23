@@ -1,0 +1,55 @@
+{{ block "demo04" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Error Demonstration</h2>
+        <div class="list-group">
+          <button hx-get="demo04-error?id=1" class="list-group-item list-group-item-action">Simulate Error A (404 Not found)</button>
+          <button hx-get="demo04-error?id=2" class="list-group-item list-group-item-action">Simulate Error B (403 Not authorized)</button>
+          <button hx-get="demo04-error?id=3" class="list-group-item list-group-item-action">Simulate Error C (Processing Error)</button>
+          <button hx-get="demo04-error?id=4" class="list-group-item list-group-item-action">Simulate Error D (Logout)</button>
+        </div>      
+<!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 04</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>User do something</li>
+            <li>When there is an error, render the error type, display to user</li>
+            <li>The user is shown the error page, with URL</li>
+            <li>Hard reloading the url shows generic error</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>Have a error page route that renders a general error page. This satisfies the hard reloading citeria</li>
+            <li>In other cases, render the page, return response headers <pre>"HX-Target":"body"</pre> and <pre>"HX-Push-Url":"someurl"</pre></li>
+            <li>Use response header<pre>HX-Trigger-After-Settle</pre> to trigger client events</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li><pre>HX-Replace-Url</pre> may be better than <pre>HX-Push-Url</pre>in some cases</li>
+          <li>May prefer<pre>HX-Trigger</pre> or <pre>HX-Trigger-After-Swap</pre> over <pre>HX-Trigger-After-Settle</pre> if you want the event to be triggered before screen updates are done</li>
+        </ul>
+        
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+

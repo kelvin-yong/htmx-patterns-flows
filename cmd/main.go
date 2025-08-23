@@ -68,6 +68,8 @@ func main() {
 	e.POST("demo03-add-01", generateDemo3Step("Month", "2/3", "demo03-add-02", "demo03-fav-colour"))
 	e.POST("demo03-add-02", generateDemo3Step("Colour", "3/3", "demo03-add-03", "demo03-thankyou"))
 	e.POST("demo03-add-03", generateDemo3Step("", "Done", "", ""))
+	e.GET("errorpage", displayErrorPageHandler)
+	e.GET("demo04-error", simulateErrorHandler)
 
 	registerFallbackRoutes(e)
 
@@ -144,4 +146,28 @@ func generateDemo3Step(item, nextTitle, nextPost, nextHistory string) func(c ech
 
 		return c.Render(200, "page-title", map[string]any{"title": "Multi-step Demo: " + nextTitle})
 	}
+}
+
+func displayErrorPageHandler(c echo.Context) error {
+	return c.Render(200, "errorpage", map[string]any{"CreatedOn": time.Now()})
+}
+
+func simulateErrorHandler(c echo.Context) error {
+	var message string
+
+	switch id := c.QueryParam("id"); id {
+	case "1":
+		message = "404: Not found"
+	case "2":
+		message = "403: Not authorized"
+	case "3":
+		message = "Some processing error"
+	case "4":
+		message = "Forcefully logged out"
+		c.Response().Header().Set("HX-Trigger-After-Settle", `{"logoutEvent":{"level" : "Critical", "details" : "No further details"}}`)
+	}
+
+	c.Response().Header().Set("HX-Retarget", "body")
+	c.Response().Header().Set("HX-Push-Url", "errorpage")
+	return c.Render(200, "errorpage", map[string]any{"CreatedOn": time.Now(), "message": message})
 }
