@@ -41,14 +41,31 @@ func main() {
 
 	for i := range 20 {
 		demoRoute := fmt.Sprintf("demo%02d", i+1)
-		e.GET("/"+demoRoute, func(c echo.Context) error {
-			return c.Render(200, demoRoute, nil)
-		})
+		switch i {
+		case 2:
+			data := struct {
+				Step        int
+				ItemName    string
+				NextPostUrl string
+				NextHistory string
+			}{
+				1, "Food", "demo03-add-01", "demo03-month",
+			}
+			e.GET("/"+demoRoute, func(c echo.Context) error {
+				return c.Render(200, demoRoute, data)
+			})
+		default:
+			e.GET("/"+demoRoute, func(c echo.Context) error {
+				return c.Render(200, demoRoute, nil)
+			})
+		}
 	}
 
 	e.POST("demo01-search", demo1Search)
 	e.POST("demo02-search", demo2Search)
-
+	e.POST("demo03-add-01", generateDemo3Step("Month", "2/3", "demo03-add-02", "demo03-fav-colour"))
+	e.POST("demo03-add-02", generateDemo3Step("Colour", "3/3", "demo03-add-03", "demo03-thankyou"))
+	e.POST("demo03-add-03", generateDemo3Step("", "Done", "", ""))
 	e.Logger.Fatal(e.Start(":9000"))
 }
 
@@ -86,4 +103,28 @@ func demo2Search(c echo.Context) error {
 	time.Sleep(3 * time.Second)
 	c.Render(200, "page-message", nil)
 	return c.Render(200, "demo2-search-result", map[string]any{"name": name})
+}
+
+func generateDemo3Step(item, nextTitle, nextPost, nextHistory string) func(c echo.Context) error {
+	data := struct {
+		ItemName    string
+		NextPostUrl string
+		NextHistory string
+	}{
+		item, nextPost, nextHistory,
+	}
+	return func(c echo.Context) error {
+		if nextPost != "" {
+			c.Render(200, "demo3-add-form", data)
+		} else {
+			c.HTML(200, "<h4>Thank you for completing the survey</h4>")
+		}
+		name := c.FormValue("name")
+		submittedItem := c.FormValue("item")
+		html :=
+			`<div hx-swap-oob="beforeend: #friend-list"><p>` + submittedItem + ": <i>" + name + `</i></p></div>`
+		c.HTML(200, html)
+
+		return c.Render(200, "page-title", map[string]any{"title": "Multi-step Demo: " + nextTitle})
+	}
 }

@@ -1,0 +1,67 @@
+{{ block "demo03" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page message --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Multi-step Demo: 1/3</h2>
+        {{ template "demo3-add-form" .}}  
+        <div id="friend-list"></div>
+      <!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 03</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>Multi-step form</li>
+            <li>At each step, form content is replaced and the page title is updated</li>
+            <li>Results are updated. No server state. There's no client state as well (only in DOM)</li>
+            <li>Can navigate using browser's Back and Forward buttons</li>
+            <li>Handle hard reloading</li>
+            <li>Handle history cache miss</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>Updating form content is using <pre>hx-target="this" hx-swap="outerHTML"</pre></li>
+            <li>Updating page title is using oob technique. e.g<pre>&lt;h2 id=&quot;pageTitle&quot; class=&quot;fw-bold mb-4&quot; hx-swap-oob=&quot;true&quot;&gt;Multi-step Demo: 3/3&lt;/h2&gt;</pre></li>
+            <li>To append content using oob, use <pre>hx-swap-oob</pre> with css selector. e.g. <pre>&lt;div hx-swap-oob=&quot;beforeend: #friend-list&quot;&gt;&lt;p&gt;Month: &lt;i&gt;May&lt;/i&gt;&lt;/p&gt;&lt;/div&gt;</pre></li>
+        </ul>
+        <div class="badge text-bg-light">History</div>
+        <ul>
+            <li>Use <pre>hx-push-url="true"</pre> in form to push url into browser history</li>
+            <li>To use a different url than the form action, <pre>hx-push-url="some-canonical-name"</pre></li>
+            <li>To handle cache miss, server to handle redirect for get request of canonical url</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li>
+              <pre>hx-push-url</pre> attribute allows you to push a URL into the browser location history.
+              This creates a new history entry, allowing navigation with the browser’s back and forward buttons. 
+              htmx snapshots the current DOM and saves it into its history cache, 
+              and restores from this cache on navigation.
+          </li>
+          <li>This snap shot is at session storage: <pre>htmx-history-cache</pre>. Do remove this on logging out.</li>
+          <li>On cache miss, a GET request is issued, with request header <pre>hx-history-restore-request: true</pre></li>
+          <li>Try clearing the cache using the browser's inspector</li>
+        
+        </ul>
+        
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+
