@@ -54,7 +54,8 @@
 
 {{ block "demo2-search-form" . }}
     <form hx-post="demo02-search" hx-target="#search-result" 
-    hx-indicator="#spinner" 
+    hx-indicator="#spinner"
+    hx-validate="true"
     hx-on:htmx:before-request="htmx.find('#search-result').innerHTML=''"
     hx-disabled-elt="button">
             <div class="mb-3">
@@ -64,8 +65,10 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label for="emailInput" class="form-label">Mobile</label>
-                <input type="text" class="form-control" id="emailInput" name="mobile" placeholder="Your mobile number">
+                <label for="emailInput" class="form-label">Mobile: Last 4 digits</label>
+                <input type="text" class="form-control" id="emailInput" name="mobile"
+                pattern="\d{4,4}"
+                placeholder="Your mobile number">
                 <div class="text-danger small mt-1">
                 </div>
             </div>

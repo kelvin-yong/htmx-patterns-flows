@@ -40,7 +40,9 @@
         <ul>
             <li>Use <pre>hx-push-url="true"</pre> in form to push url into browser history</li>
             <li>To use a different url than the form action, <pre>hx-push-url="some-canonical-name"</pre></li>
-            <li>To handle cache miss, server to handle redirect for get request of canonical url</li>
+            <li>To handle cache miss, server to handle redirect for get request of canonical url - 
+              Either using http status code 303 with url to redirect, 
+              or use <pre>HX-Location</pre> Response Header with 2xx which will push the history and swap the body only</li>
         </ul>
         
         <div class="badge text-bg-info">Notes</div>

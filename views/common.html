@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="static/css/index.css">
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
+            // consider using <meta name="htmx-config" content='{"responseHandling": [...]}' /> instead
             document.body.addEventListener("htmx:beforeSwap", (evt) => {
                 if (evt.detail.xhr.status === 422) {
                     evt.detail.shouldSwap = true;
