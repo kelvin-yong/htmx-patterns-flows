@@ -1,0 +1,48 @@
+{{ block "demo05" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page message --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Multi-step: Another demo</h2>
+        {{ template "multi-form" .}}  
+      <!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 05</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>Multi-step form</li>
+            <li>Navigate using form buttons: Prev and Next</li>
+            <li>1 big form, parts hidden by CSS</li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>Form replaces itself (same target)</li>
+            <li>Initially the form have empty input values</li>
+            <li>Upon next/prev, the form is rendered with input values as the values being submitted. State is in form, not JS objects</li>
+        </ul>
+
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li>Can combine different approach with history so that user can also navigate with browser's previous and next buttons</li>
+        </ul>
+        
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+

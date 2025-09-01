@@ -114,3 +114,129 @@
 {{ block "page-title" . }}
     <h2 id="pageTitle" class="fw-bold mb-4" hx-swap-oob="true">{{ .title }}</h2>
 {{ end }}
+
+{{ block "multi-form" . }}
+<form id="hx-order-form">
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .step-{{.curStep}} {
+            display: inherit;
+        }
+
+        {{ if eq .direction "next"}}
+        .htmx-added .step-{{.prevStep}} {
+            display: inherit;
+        }
+
+        @keyframes slide-to-left {
+            to { transform: translateX(-100%); }
+        }
+
+        .htmx-added .step {
+            animation:  200ms both running slide-to-left;
+        }
+        {{ end }}
+
+        {{ if eq .direction "prev"}}
+
+        .htmx-added .step-{{.nextStep}} {
+            display: inherit;
+        }
+
+        @keyframes slide-from-left {
+            from { transform: translateX(-100%); }
+        }
+
+        .htmx-added .step {
+            animation: 200ms both running slide-from-left;
+        }
+        {{ end }}
+    </style>
+
+    <input type="hidden" value="{{.curStep}}" name="step">
+
+    <div class="mb-3 step-0 step hidden">
+        <label for="input1" class="form-label">What's your favourite Food? (1/3)</label>
+        <input type="text" class="form-control" id="input1" name="food" value="{{.food}}"placeholder="Favourite Food">
+    </div>
+
+    <div class="mb-3 step-1 step hidden">
+        <label for="input2" class="form-label">What's your favourite Month? (2/3)</label>
+        <input type="text" class="form-control" id="input2" name="month" value="{{.month}}" placeholder="Favourite Month">
+    </div>
+
+    <div class="mb-3 step-2 step hidden">
+        <label for="input1" class="form-label">What's your favourite Colour? (3/3) </label>
+        <input type="text" class="form-control" id="input1" name="colour" value="{{.colour}}" placeholder="Favourite Colour">
+    </div>
+
+    <div class="mb-3 step-3 step hidden">
+        <h4>Here are your favourites</h4>
+        <div>Food: {{.food}}</div>
+        <div>Month: {{.month}}</div>
+        <div>Colour: {{.colour}}</div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <span>
+            {{ if ne .curStep 0 }}
+                <div id="submit-button-back"
+                     hx-post="demo05/prev"
+                     hx-target="#hx-order-form"
+                     hx-swap="outerHTML settle:200ms"
+                >
+                    <button type="submit" class="btn btn-secondary">Back</button>
+                </div>
+            {{ end }}
+        </span>
+
+
+        <span id="submit-button-next"
+             hx-post="demo05/next"
+             hx-target="#hx-order-form"
+             hx-swap="outerHTML settle:200ms"
+        >
+        
+            {{ if eq .curStep 3 }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            {{ else }}
+                <button type="submit" class="btn btn-primary">Next</button>
+            {{ end }}
+        </span>
+    </div>
+</form>
+{{ end }}
+
+
+{{ block "contact-item" . }}
+{{ if not .Deleted}}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ .Name }}
+      <button 
+        hx-delete="item-delete?id={{.Id}}"
+        hx-confirm="Are you sure?"
+        hx-target="closest li"
+        hx-swap="delete"        
+        class="btn btn-sm btn-outline-danger"
+    >
+        ❌
+      </button>
+    </li>
+{{ end }}
+{{ end }}
+
+
+
+{{ block "contact-list" . }}
+<div class="container mt-5">
+    <ul class="list-group">
+    {{ range .ItemList }}
+        {{ template "contact-item" .}}
+    {{ end }}
+    </ul>
+</div>
+{{ end }}

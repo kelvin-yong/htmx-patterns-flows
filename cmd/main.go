@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -25,8 +26,9 @@ func NewTemplates() *Templates {
 	}
 }
 
+var allContacts = getContacts()
+
 func main() {
-	fmt.Println(RouteDemo3Step1)
 	e := echo.New()
 	e.Static("/static", "static")
 	e.Use(middleware.Logger())
@@ -56,6 +58,12 @@ func main() {
 			e.GET("/"+demoRoute, func(c echo.Context) error {
 				return c.Render(200, demoRoute, data)
 			})
+		case 4:
+			data := map[string]any{"curStep": 0, "nextStep": 1, "prevStep": -1, "direction": "none"}
+
+			e.GET("/"+demoRoute, func(c echo.Context) error {
+				return c.Render(200, demoRoute, data)
+			})
 		default:
 			e.GET("/"+demoRoute, func(c echo.Context) error {
 				return c.Render(200, demoRoute, nil)
@@ -70,6 +78,26 @@ func main() {
 	e.POST("demo03-add-03", generateDemo3Step("", "Done", "", ""))
 	e.GET("errorpage", displayErrorPageHandler)
 	e.GET("demo04-error", simulateErrorHandler)
+	e.POST("demo05/next", demo05NextHandler)
+	e.POST("demo05/prev", demo05BackHandler)
+
+	e.GET("list-items", func(c echo.Context) error {
+		return c.Render(200, "contact-list", map[string]any{"ItemList": allContacts})
+	})
+
+	e.DELETE("item-delete", func(c echo.Context) error {
+		itemId, _ := strconv.Atoi(c.QueryParam("id"))
+
+		if itemId != 5 && itemId != 8 {
+			allContacts[itemId].Deleted = true
+			return c.Render(200, "page-message", map[string]any{
+				"type": "info", "message": fmt.Sprintf("\"%s\" removed", allContacts[itemId].Name)})
+		}
+
+		c.Response().Header().Set("HX-Reswap", "none")
+		return c.Render(422, "page-message", map[string]any{
+			"type": "danger", "message": fmt.Sprintf("\"%s\" cannot be delete", allContacts[itemId].Name)})
+	})
 
 	registerFallbackRoutes(e)
 
@@ -170,4 +198,51 @@ func simulateErrorHandler(c echo.Context) error {
 	c.Response().Header().Set("HX-Retarget", "body")
 	c.Response().Header().Set("HX-Push-Url", "errorpage")
 	return c.Render(200, "errorpage", map[string]any{"CreatedOn": time.Now(), "message": message})
+}
+
+func demo05NextHandler(c echo.Context) error {
+	step, _ := strconv.Atoi(c.FormValue("step"))
+	step += 1
+	food := c.FormValue("food")
+	month := c.FormValue("month")
+	colour := c.FormValue("colour")
+	if step == 4 {
+		return c.HTML(200, "<h4>Thank you for completing the survey</h4>")
+	}
+
+	return c.Render(200, "multi-form", map[string]any{
+		"curStep": step, "nextStep": step + 1, "prevStep": step - 1, "direction": "next",
+		"food": food, "month": month, "colour": colour,
+	})
+}
+
+func demo05BackHandler(c echo.Context) error {
+	step, _ := strconv.Atoi(c.FormValue("step"))
+	step -= 1
+	food := c.FormValue("food")
+	month := c.FormValue("month")
+	colour := c.FormValue("colour")
+	return c.Render(200, "multi-form", map[string]any{
+		"curStep": step, "nextStep": step + 1, "prevStep": step - 1, "direction": "prev",
+		"food": food, "month": month, "colour": colour,
+	})
+}
+
+type Contact struct {
+	Name    string
+	Id      int
+	Deleted bool
+}
+
+type Contacts []Contact
+
+func getContacts() Contacts {
+	var c Contacts
+	for i := range 16 {
+		c = append(c, Contact{Name: fmt.Sprintf("Item %d", i), Id: i})
+	}
+	c[0].Deleted = true
+	c[5].Name = "Can't make me move"
+	c[8].Name = "Here to stay"
+	return c
 }

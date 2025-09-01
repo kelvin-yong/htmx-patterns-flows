@@ -1,0 +1,51 @@
+{{ block "demo06" .}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "head"}}
+<body class="d-flex flex-column">
+  {{ template "header"}}  
+  <main class="flex-grow-1 d-flex">
+    <section class="panel-left">
+      <!-- Content here: start -->
+        <div id="pageMessage"><!-- empty page message --></div>
+        <h2 id="pageTitle" class="fw-bold mb-4">Delete Demo</h2>
+        <div hx-trigger="load" hx-get="list-items"></div>
+      <!-- Content here: end -->
+    </section>
+
+    <section class="panel-right">
+        {{ template "sidebar"}}  
+        <!-- Description here: start -->
+        <h2 class="h5">Demo 06</h2>
+        <div class="badge text-bg-info">Description</div>
+        <ul>
+            <li>Shows a long list of item</li>
+            <li>Delete item</li>
+            <li>Handle errors: http status code 422 </li>
+        </ul>
+        
+        <div class="badge text-bg-info">Technique</div>
+        <br/>
+        <div class="badge text-bg-light">General</div>
+        <ul>
+            <li>The list is a separate end point, loaded via e.g. <pre>&lt;div hx-trigger=&quot;load&quot; hx-get=&quot;list-items&quot;&gt;</pre></li>
+            <li>User <pre>hx-confirm</pre> to confirm user's action</li>
+            <li>The list isn't reloaded when items are removed. Used <pre>hx-target="closest li"</pre> and <pre>hx-swap="delete"</pre></li>
+            <li>On error, set header <pre>HX-Reswap: none</pre></li>
+        </ul>
+        <div class="badge text-bg-info">Notes</div>
+        <ul>
+          <li>You can reload the page and see that the delete items are gone</li>
+          <li>
+            Because it is long list, it may be more efficient to (A) remove item from DB, return status, remove item element from DOM ; 
+            rather than (B) remove item from DB, query the DB for the updated list, replace the whole list the DOM
+          </li>
+        </ul>
+        <!-- Description here: end -->
+    </section>
+  </main>    
+    {{ template "footer"}}
+</body>
+</html>
+{{ end }}
+
