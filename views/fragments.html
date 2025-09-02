@@ -119,10 +119,20 @@
 <form id="hx-order-form">
 
     <style>
+        #form-wizard{
+            display: flex;
+            flex-direction: row;
+            overflow-x: hidden;
+        }
+
         .hidden {
             display: none;
         }
-
+        .step{
+            flex-direction: column;
+            width: 100%;
+            flex-shrink: 0;
+        }
         .step-{{.curStep}} {
             display: inherit;
         }
@@ -137,7 +147,7 @@
         }
 
         .htmx-added .step {
-            animation:  200ms both running slide-to-left;
+            animation:  400ms both running slide-to-left;
         }
         {{ end }}
 
@@ -152,33 +162,34 @@
         }
 
         .htmx-added .step {
-            animation: 200ms both running slide-from-left;
+            animation: 400ms both running slide-from-left;
         }
         {{ end }}
     </style>
 
     <input type="hidden" value="{{.curStep}}" name="step">
+    <div id="form-wizard">
+        <div class="mb-3 step-0 step hidden">
+            <label for="input1" class="form-label">What's your favourite Food? (1/3)</label>
+            <input type="text" class="form-control" id="input1" name="food" value="{{.food}}"placeholder="Favourite Food">
+        </div>
 
-    <div class="mb-3 step-0 step hidden">
-        <label for="input1" class="form-label">What's your favourite Food? (1/3)</label>
-        <input type="text" class="form-control" id="input1" name="food" value="{{.food}}"placeholder="Favourite Food">
-    </div>
+        <div class="mb-3 step-1 step hidden">
+            <label for="input2" class="form-label">What's your favourite Month? (2/3)</label>
+            <input type="text" class="form-control" id="input2" name="month" value="{{.month}}" placeholder="Favourite Month">
+        </div>
 
-    <div class="mb-3 step-1 step hidden">
-        <label for="input2" class="form-label">What's your favourite Month? (2/3)</label>
-        <input type="text" class="form-control" id="input2" name="month" value="{{.month}}" placeholder="Favourite Month">
-    </div>
+        <div class="mb-3 step-2 step hidden">
+            <label for="input3" class="form-label">What's your favourite Colour? (3/3) </label>
+            <input type="text" class="form-control" id="input3" name="colour" value="{{.colour}}" placeholder="Favourite Colour">
+        </div>
 
-    <div class="mb-3 step-2 step hidden">
-        <label for="input1" class="form-label">What's your favourite Colour? (3/3) </label>
-        <input type="text" class="form-control" id="input1" name="colour" value="{{.colour}}" placeholder="Favourite Colour">
-    </div>
-
-    <div class="mb-3 step-3 step hidden">
-        <h4>Here are your favourites</h4>
-        <div>Food: {{.food}}</div>
-        <div>Month: {{.month}}</div>
-        <div>Colour: {{.colour}}</div>
+        <div class="mb-3 step-3 step hidden">
+            <h4>Here are your favourites</h4>
+            <div>Food: {{.food}}</div>
+            <div>Month: {{.month}}</div>
+            <div>Colour: {{.colour}}</div>
+        </div>
     </div>
 
     <div class="d-flex gap-2">
@@ -187,7 +198,7 @@
                 <div id="submit-button-back"
                      hx-post="demo05/prev"
                      hx-target="#hx-order-form"
-                     hx-swap="outerHTML settle:200ms"
+                     hx-swap="outerHTML settle:400ms"
                 >
                     <button type="submit" class="btn btn-secondary">Back</button>
                 </div>
@@ -198,7 +209,7 @@
         <span id="submit-button-next"
              hx-post="demo05/next"
              hx-target="#hx-order-form"
-             hx-swap="outerHTML settle:200ms"
+             hx-swap="outerHTML settle:400ms"
         >
         
             {{ if eq .curStep 3 }}
